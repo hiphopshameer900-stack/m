@@ -1,0 +1,248 @@
+/* Core Layout Setup */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    font-family: 'Georgia', serif;
+    color: #fff;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    transition: background 3s cubic-bezier(0.25, 1, 0.5, 1), color 2s ease;
+}
+
+/* Heart Rain Layer */
+.heart-rain-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1; /* Sits gently behind text cards but overlaying backgrounds */
+    overflow: hidden;
+}
+
+/* Heart Rain Falling Animations */
+.rain-drop {
+    position: absolute;
+    top: -20px;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    animation: fall linear forwards;
+    filter: drop-shadow(0 0 5px rgba(255, 75, 43, 0.5));
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) scale(0.8) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.7;
+    }
+    90% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(105vh) scale(1) rotate(20deg);
+        opacity: 0;
+    }
+}
+
+/* Master Scene Architecture */
+.scene {
+    position: relative;
+    z-index: 2; /* Ensures text cards sit on top of the heart rain */
+    width: 100%;
+    max-width: 650px;
+    padding: 60px 24px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+}
+
+.scene.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* Heart Components */
+.heart {
+    font-size: 4.5rem;
+    margin-bottom: 25px;
+    animation: pulse 1.2s infinite ease-in-out;
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.small-heart { animation: pulse 1.8s infinite ease-in-out; }
+.display-heart { font-size: 5.5rem; }
+.final-heart { font-size: 6.5rem; }
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 20px rgba(255,75,43,0.9)); }
+    100% { transform: scale(1); }
+}
+
+.heart.slow { animation: pulse 2.5s infinite ease-in-out; }
+
+.heart.cracked::after {
+    content: "⚡";
+    position: absolute;
+    font-size: 1.8rem;
+    top: 25%;
+    left: 35%;
+    color: #000;
+    opacity: 0.5;
+}
+
+/* Non-overlapping Text Flow */
+.text-line {
+    font-size: 1.35rem;
+    line-height: 1.7;
+    margin: 14px 0;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 1s ease, transform 1s ease;
+    word-wrap: break-word;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
+.text-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.highlight-text { font-weight: bold; margin-top: 25px; }
+.main-conclusion { font-size: 1.7rem; font-weight: bold; text-align: center; }
+
+/* Universe Elements */
+.universe-bg {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, #1e0926 0%, #030008 85%);
+    z-index: -2;
+    opacity: 0;
+    transition: opacity 3s ease;
+}
+body.galaxy-state .universe-bg { opacity: 1; }
+
+/* Dynamic Environments States */
+body.storm { background-color: #0a0d12; color: #a5abb3; }
+body.sunrise { background: linear-gradient(to bottom, #fff2f2 0%, #ffe3d1 50%, #e6f9ff 100%); color: #332a28; }
+body.galaxy-state { background: #04010a; color: #ffffff; }
+
+/* Animated Blooms */
+.animated-blooms {
+    font-size: 2.5rem;
+    margin: 30px 0;
+    letter-spacing: 12px;
+    animation: floatUp 4s infinite ease-in-out;
+}
+@keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Glowing Promises Cards */
+.card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.promise-card {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.8s ease;
+    text-align: left;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+body.sunrise .promise-card {
+    background: rgba(255, 255, 255, 0.96);
+    border-left: 6px solid #ff416c;
+}
+.promise-card.visible { opacity: 1; transform: translateY(0); }
+.promise-card h3 { font-size: 1.25rem; margin-bottom: 6px; color: #d6336c; }
+body.sunrise .promise-card h3 { color: #ff416c; }
+
+/* Letter System Container */
+.envelope {
+    background: #fefcf9;
+    color: #1c1c1c;
+    padding: 40px 28px;
+    border-radius: 6px;
+    box-shadow: 0 15px 45px rgba(255, 105, 180, 0.15);
+    width: 100%;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+    margin: 20px 0;
+    border: 1px solid rgba(255, 192, 203, 0.3);
+}
+.envelope.open { opacity: 1; transform: scale(1); }
+.letter-content { font-family: 'Courier New', Courier, monospace; text-align: left; position: relative; }
+.signature { text-align: right; margin-top: 25px; font-style: italic; color: #ff416c; }
+
+/* Tear Drop Effect */
+.tear-drop {
+    position: absolute;
+    bottom: 20px; right: 120px;
+    width: 12px; height: 12px;
+    background: rgba(160, 210, 255, 0.6);
+    border-radius: 0 50% 50% 50%;
+    transform: rotate(45deg);
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+.envelope.open .tear-drop { animation: drip 3s forwards 4s; }
+@keyframes drip {
+    0% { transform: translateY(-40px) rotate(45deg); opacity: 0; }
+    50% { opacity: 0.7; }
+    100% { transform: translateY(0) scale(1.8) rotate(45deg); opacity: 0; filter: blur(1.5px); }
+}
+
+/* Master Navigation Buttons */
+.btn {
+    background: linear-gradient(45deg, #ff4b2b, #ff416c);
+    color: white;
+    border: none;
+    padding: 15px 36px;
+    font-size: 1.15rem;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(255, 65, 108, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s;
+    margin-top: 20px;
+    font-family: inherit;
+    opacity: 0;
+    pointer-events: none;
+}
+.btn.show-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+.btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 6px 25px rgba(255, 65, 108, 0.7);
+}
